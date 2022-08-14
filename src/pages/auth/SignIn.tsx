@@ -13,37 +13,21 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import axios from 'axios';
 
 const theme = createTheme();
-export interface LoginProps {
-  email: string;
-  password: string;
-}
-
-export interface ValidateProps {
-  email: boolean;
-  password: boolean;
-}
 
 export default function SignIn() {
-  const [user, setUser] = React.useState<LoginProps>({
-    email: '',
-    password: '',
-  });
-  const [validate, setValidate] = React.useState<ValidateProps>({
-    email: false,
-    password: false,
-  });
-
   const [disabled, setDisabled] = React.useState<boolean>(true);
 
-  const handleSubmit = () => {
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const data = new FormData(event.currentTarget);
+
     axios
       .post('http://localhost:8080/users/login', {
-        email: user.email,
-        password: user.password,
+        email: data.get('email'),
+        password: data.get('password'),
       })
       .then((res) => {
         alert(res.data.message);
-        localStorage.setItem('TOKEN', res.data.token);
         if (localStorage.getItem('TOKEN')) {
           window.location.href = '/';
         } else {
@@ -51,30 +35,7 @@ export default function SignIn() {
           window.location.href = '/login';
         }
       })
-      .catch((err) => alert(err));
-  };
-
-  const handleInputValue = (e: any) => {
-    //validation check input
-    const { name, value } = e.target;
-    setUser({
-      ...user,
-      [name]: value,
-    });
-
-    if (!user.email || !user.password) return false;
-
-    if (!user.email.includes('@') || !user.email.includes('.')) {
-      setDisabled(true);
-    } else {
-      setDisabled(false);
-    }
-
-    if (user.password.length < 8) {
-      setDisabled(true);
-    } else {
-      setDisabled(false);
-    }
+      .catch((err) => alert(err.message));
   };
 
   return (
@@ -107,7 +68,6 @@ export default function SignIn() {
               name="email"
               autoComplete="email"
               autoFocus
-              onChange={handleInputValue}
             />
             <TextField
               margin="normal"
@@ -118,7 +78,6 @@ export default function SignIn() {
               type="password"
               id="password"
               autoComplete="current-password"
-              onChange={handleInputValue}
             />
             <FormControlLabel
               control={<Checkbox value="remember" color="primary" />}

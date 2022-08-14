@@ -18,11 +18,17 @@ export default function SignUp() {
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    axios.post('http://localhost:8080/users/create');
-    console.log({
-      email: data.get('email'),
-      password: data.get('password'),
-    });
+
+    axios
+      .post('http://localhost:8080/users/create', {
+        email: data.get('email'),
+        password: data.get('password'),
+      })
+      .then((res) => {
+        alert('res.data.message');
+        localStorage.setItem('TOKEN', res.data.token);
+      })
+      .catch((err) => alert(err.message));
   };
 
   return (
