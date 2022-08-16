@@ -1,7 +1,7 @@
-export const LOG_IN_REQUEST = 'LOG_IN_REQUEST';
-export const LOG_IN_SUCCESS = 'LOG_IN_SUCCESS';
-export const LOG_IN_FAILURE = 'LOG_IN_FAILURE';
-export const LOG_OUT = 'LOG_OUT';
+export const LOG_IN_REQUEST = 'user/LOG_IN_REQUEST' as const;
+export const LOG_IN_SUCCESS = 'user/LOG_IN_SUCCESS' as const;
+export const LOG_IN_FAILURE = 'user/LOG_IN_FAILURE' as const;
+export const LOG_OUT = 'user/LOG_OUT';
 
 export const logInRequest = (data: object) => {
   return {

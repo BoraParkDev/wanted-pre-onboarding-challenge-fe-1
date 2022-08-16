@@ -1,17 +1,36 @@
 import produce from 'immer';
-import { LOG_IN_REQUEST } from '../actions/user';
-import { LOG_IN_SUCCESS } from '../actions/user';
-import { LOG_IN_FAILURE } from '../actions/user';
-import { LOG_OUT } from '../actions/user';
+import {
+  logInRequest,
+  logInSuccess,
+  logInFailure,
+  logOut,
+} from '../actions/user';
+import {
+  LOG_IN_REQUEST,
+  LOG_IN_SUCCESS,
+  LOG_IN_FAILURE,
+  LOG_OUT,
+} from '../actions/user';
 
-const initialState = {
+type UserState = {
+  data: null | object;
+  isLoggingIn: boolean;
+};
+
+type UserAction =
+  | ReturnType<typeof logInRequest>
+  | ReturnType<typeof logInSuccess>
+  | ReturnType<typeof logInFailure>
+  | ReturnType<typeof logOut>;
+
+const initialState: UserState = {
   data: null,
   isLoggingIn: false,
 };
 
 export const userReducer = (
-  prevState = initialState,
-  action: { type: string; data: null }
+  prevState: UserState = initialState,
+  action: UserAction
 ) => {
   return produce(prevState, (draft) => {
     switch (action.type) {
