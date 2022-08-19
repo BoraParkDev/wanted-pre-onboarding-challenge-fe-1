@@ -9,6 +9,6 @@ export async function getUserData() {
 
 export interface UserData {
   //제네릭으로 response 데이터 타입 설정
-  email: null;
-  password: null;
+  message: null;
+  token: null;
 }

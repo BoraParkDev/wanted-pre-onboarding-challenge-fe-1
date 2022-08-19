@@ -7,7 +7,7 @@ export const LOG_IN_SUCCESS = 'user/LOG_IN_SUCCESS';
 export const LOG_IN_FAILURE = 'user/LOG_IN_FAILURE';
 export const LOG_OUT = 'user/LOG_OUT';
 
-export const getUserDataeAsync = createAsyncAction(
+export const getUserDataAsync = createAsyncAction(
   LOG_IN_REQUEST,
   LOG_IN_SUCCESS,
   LOG_IN_FAILURE,

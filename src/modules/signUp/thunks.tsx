@@ -2,7 +2,7 @@ import { ThunkAction } from 'redux-thunk';
 import { RootState } from '..';
 import { UserAction } from './types';
 import { getUserData } from '../../api/auth/login';
-import { getUserDataAsync } from './actions';
+import { getUserDataeAsync } from './actions';
 import { AxiosError } from 'axios';
 
 export function getUserProfileThunk(): ThunkAction<
@@ -12,7 +12,7 @@ export function getUserProfileThunk(): ThunkAction<
   UserAction
 > {
   return async (dispatch) => {
-    const { request, success, failure } = getUserDataAsync;
+    const { request, success, failure } = getUserDataeAsync;
     dispatch(request());
     try {
       const userProfile = await getUserData();
