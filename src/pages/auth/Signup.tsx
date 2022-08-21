@@ -31,16 +31,26 @@ export default function SignUp() {
       .then((res) => {
         console.log(res);
         alert(res.message);
-        localStorage.setItem('TOKEN', res.data.token);
-        //성공시 메인으로 이동
+        //성공시 로그인 페이지로 이동
         window.location.href = '/';
       })
       .catch((err) => {
-        console.log(err.message);
-      });
+        let code = err.message.slice(-3);
 
-    //input초기화
-    setUser({ ...user, email: '', password: '' });
+        switch (code) {
+          case (code = '400'):
+            alert('이메일 / 패스워드 값이 비어있습니다');
+            break;
+          case (code = '500'):
+            alert(`서버에 오류가 발생하였습니다.\n관리자에게 문의하여 주세요`);
+            break;
+          default:
+            alert(
+              `알 수 없는 오류가 발생하였습니다.\n회원가입을 다시 시도해주세요`
+            );
+            return;
+        }
+      });
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {

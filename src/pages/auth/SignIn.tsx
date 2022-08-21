@@ -18,12 +18,21 @@ const theme = createTheme();
 
 export default function SignIn() {
   const dispatch = useAppDispatch();
-  const userProfile = useAppSelect(getUserProfile);
-  console.log(userProfile);
   const [user, setUser] = React.useState<User>({ email: '', password: '' });
 
-  const handleSubmit = (user: User) => {
-    dispatch(setUserAsync(user));
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    dispatch(setUserAsync(user))
+      .unwrap()
+      .then((res) => {
+        console.log(res);
+        //성공시 메인으로 이동
+        // window.location.href = '/main';
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -46,7 +55,12 @@ export default function SignIn() {
           <Typography component="h1" variant="h5">
             Sign In
           </Typography>
-          <Box component="form" noValidate sx={{ mt: 1 }}>
+          <Box
+            component="form"
+            noValidate
+            sx={{ mt: 1 }}
+            onSubmit={handleSubmit}
+          >
             <TextField
               margin="normal"
               required
@@ -78,7 +92,6 @@ export default function SignIn() {
               fullWidth
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
-              onClick={() => handleSubmit(user)}
             >
               Sign In
             </Button>
