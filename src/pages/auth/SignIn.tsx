@@ -10,32 +10,25 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import axios from 'axios';
+import { useAppDispatch, useAppSelect } from '../../redux/configStore.hooks';
+import { getUserProfile, User } from '../../redux/modules/user';
+import { setUserAsync } from '../../api/user';
 
 const theme = createTheme();
 
 export default function SignIn() {
-  const [disabled, setDisabled] = React.useState<boolean>(true);
+  const dispatch = useAppDispatch();
+  const userProfile = useAppSelect(getUserProfile);
+  console.log(userProfile);
+  const [user, setUser] = React.useState<User>({ email: '', password: '' });
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
+  const handleSubmit = (user: User) => {
+    dispatch(setUserAsync(user));
+  };
 
-    axios
-      .post('http://localhost:8080/users/login', {
-        email: data.get('email'),
-        password: data.get('password'),
-      })
-      .then((res) => {
-        alert(res.data.message);
-        if (localStorage.getItem('TOKEN')) {
-          window.location.href = '/';
-        } else {
-          alert('유효하지 않은 사용자입니다./n다시 로그인을 시도해주세요.');
-          window.location.href = '/login';
-        }
-      })
-      .catch((err) => alert(err.message));
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setUser({ ...user, [name]: value });
   };
 
   return (
@@ -53,12 +46,7 @@ export default function SignIn() {
           <Typography component="h1" variant="h5">
             Sign In
           </Typography>
-          <Box
-            component="form"
-            onSubmit={handleSubmit}
-            noValidate
-            sx={{ mt: 1 }}
-          >
+          <Box component="form" noValidate sx={{ mt: 1 }}>
             <TextField
               margin="normal"
               required
@@ -68,6 +56,7 @@ export default function SignIn() {
               name="email"
               autoComplete="email"
               autoFocus
+              onChange={handleInputChange}
             />
             <TextField
               margin="normal"
@@ -78,6 +67,7 @@ export default function SignIn() {
               type="password"
               id="password"
               autoComplete="current-password"
+              onChange={handleInputChange}
             />
             <FormControlLabel
               control={<Checkbox value="remember" color="primary" />}
@@ -88,7 +78,7 @@ export default function SignIn() {
               fullWidth
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
-              disabled={disabled}
+              onClick={() => handleSubmit(user)}
             >
               Sign In
             </Button>

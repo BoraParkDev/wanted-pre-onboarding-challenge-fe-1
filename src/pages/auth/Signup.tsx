@@ -10,25 +10,42 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import axios from 'axios';
+import { addUserAsync } from '../../api/user';
+import { useAppDispatch } from '../../redux/configStore.hooks';
 
 const theme = createTheme();
+interface User {
+  email: string;
+  password: string;
+}
 
 export default function SignUp() {
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
+  const dispatch = useAppDispatch();
+  const [user, setUser] = React.useState<User>({ email: '', password: '' });
 
-    axios
-      .post('http://localhost:8080/users/create', {
-        email: data.get('email'),
-        password: data.get('password'),
-      })
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    dispatch(addUserAsync(user))
+      .unwrap()
       .then((res) => {
-        alert('res.data.message');
+        console.log(res);
+        alert(res.message);
         localStorage.setItem('TOKEN', res.data.token);
+        //성공시 메인으로 이동
+        window.location.href = '/';
       })
-      .catch((err) => alert(err.message));
+      .catch((err) => {
+        console.log(err.message);
+      });
+
+    //input초기화
+    setUser({ ...user, email: '', password: '' });
+  };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setUser({ ...user, [name]: value });
   };
 
   return (
@@ -49,8 +66,8 @@ export default function SignUp() {
           <Box
             component="form"
             noValidate
-            onSubmit={handleSubmit}
             sx={{ mt: 3 }}
+            onSubmit={handleSubmit}
           >
             <Grid container spacing={2}>
               <Grid item xs={12} sm={6}>
@@ -82,6 +99,7 @@ export default function SignUp() {
                   label="Email Address"
                   name="email"
                   autoComplete="email"
+                  onChange={handleInputChange}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -93,6 +111,7 @@ export default function SignUp() {
                   type="password"
                   id="password"
                   autoComplete="new-password"
+                  onChange={handleInputChange}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -114,7 +133,7 @@ export default function SignUp() {
             </Button>
             <Grid container justifyContent="flex-end">
               <Grid item>
-                <Link href="#" variant="body2">
+                <Link href="/login" variant="body2">
                   Already have an account? Sign in
                 </Link>
               </Grid>
