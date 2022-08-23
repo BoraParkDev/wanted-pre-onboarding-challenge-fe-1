@@ -37,11 +37,6 @@ const userSlice = createSlice({
     builder.addCase(setUserAsync.fulfilled, (state, action) => {
       return { ...state, ...action.payload };
     });
-    builder.addCase(setUserAsync.pending, (state, action) => {});
-    builder.addCase(setUserAsync.rejected, (state, action) => {
-      console.log(state);
-      console.log({ ...state, ...action });
-    });
   },
 });
 

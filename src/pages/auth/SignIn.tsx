@@ -10,8 +10,8 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { useAppDispatch, useAppSelect } from '../../redux/configStore.hooks';
-import { getUserProfile, User } from '../../redux/modules/user';
+import { useAppDispatch } from '../../redux/configStore.hooks';
+import { User } from '../../redux/modules/user';
 import { setUserAsync } from '../../api/user';
 
 const theme = createTheme();
@@ -26,12 +26,28 @@ export default function SignIn() {
     dispatch(setUserAsync(user))
       .unwrap()
       .then((res) => {
-        console.log(res);
+        alert(res);
         //성공시 메인으로 이동
         // window.location.href = '/main';
       })
       .catch((err) => {
-        console.log(err);
+        let code = err.message.slice(-3);
+
+        switch (code) {
+          case (code = '400'):
+            alert('이메일 / 패스워드 값이 비어있습니다');
+            break;
+          case (code = '404'):
+            alert('이메일 또는 패스워드가 일치하지 않습니다.');
+            break;
+          case (code = '500'):
+            alert(`서버에 오류가 발생하였습니다.\n관리자에게 문의하여 주세요`);
+            break;
+          default:
+            alert(
+              `알 수 없는 오류가 발생하였습니다.\n회원가입을 다시 시도해주세요`
+            );
+        }
       });
   };
 

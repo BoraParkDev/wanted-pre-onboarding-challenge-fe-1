@@ -48,7 +48,6 @@ export default function SignUp() {
             alert(
               `알 수 없는 오류가 발생하였습니다.\n회원가입을 다시 시도해주세요`
             );
-            return;
         }
       });
   };
